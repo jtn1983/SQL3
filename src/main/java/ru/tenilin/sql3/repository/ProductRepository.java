@@ -18,10 +18,13 @@ public class ProductRepository {
 
     private static final String QUERY_FILE_NAME = "get_products_by_name.sql";
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private String query = read(QUERY_FILE_NAME);
+
+    public ProductRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     private static String read(String scriptFileName) {
         try (InputStream is = new ClassPathResource(scriptFileName).getInputStream();
@@ -33,6 +36,6 @@ public class ProductRepository {
     }
 
     public List<String> getProductName(String name) {
-        return namedParameterJdbcTemplate.queryForList(query, Collections.singletonMap("name", "Sergey"), String.class);
+        return namedParameterJdbcTemplate.queryForList(query, Collections.singletonMap("name", name), String.class);
     }
 }
